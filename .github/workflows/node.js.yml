@@ -1,0 +1,64 @@
+name: Advanced Portfolio CI/CD
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: 📦 Install Dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm install
+          fi
+
+      - name: 🧹 Run ESLint
+        run: |
+          if [ -f package.json ]; then
+            npx eslint . || true
+          fi
+
+      - name: 🔗 Check Broken Links
+        run: |
+          npx broken-link-checker https://Solfegesam.github.io/Swahili-iGaming-Portfolio/ -ro || true
+
+      - name: 🔍 Run Lighthouse Audit
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          urls: |
+            https://Solfegesam.github.io/Swahili-iGaming-Portfolio/
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+      - name: 🏗 Build Project
+        run: |
+          if [ -f package.json ]; then
+            npm run build || true
+          fi
+
+      - name: 📤 Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: 📦 Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./
+
+      - name: 🚀 Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
