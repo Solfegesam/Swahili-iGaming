@@ -53,7 +53,7 @@ I help iGaming brands communicate effectively with the Kenyan market through cul
 
 ## 🌐 Live Portfolio
 
-🔗 https://Solfegesam.github.io/Swahili-iGaming-Portfolio/
+🔗 https://github.com/Solfegesam
 
 ---
 
